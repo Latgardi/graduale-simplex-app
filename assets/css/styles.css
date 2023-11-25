@@ -1,0 +1,41 @@
+.dot {
+    height: 13px;
+    width: 13px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.breadcrumb {
+    padding: 10px 16px;
+    list-style: none;
+}
+
+.breadcrumb > * {
+    display: inline;
+    font-size: 18px;
+}
+.breadcrumb li+li:before{
+    font-family: var(--mono-font);
+    color: var(--code);
+    padding: 8px;
+    content: "/";
+}
+li.no-style {
+    list-style-type: none;
+}
+details {
+    padding: 0.7rem 0.1rem;
+    background-color: var(--bg);
+    border: none;
+}
+summary {
+    background-color: var(--accent-bg);
+    border: 1px solid var(--accent-bg);
+    border-radius: var(--standard-border-radius);
+}
+
+p.today-liturgy {
+    text-align: center;
+}
+code.sans {
+    font-family: var(--sans-font);
+}
