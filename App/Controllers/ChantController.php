@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Lib\Enum\CategoryWorkingStatus;
 use App\Lib\Enum\ChantCategory;
 use App\Lib\Type\ControllerResult;
 use App\Localization\LocalizedName;
@@ -18,8 +19,13 @@ class ChantController extends BaseController
         $categories = [];
         foreach (ChantCategory::cases() as $category) {
             $categoryName = strtolower(str_replace('_', '-', $category->name));
+            if ($category->getStatus() === CategoryWorkingStatus::IsEmptyYet) {
+                $link = null;
+            } else {
+                $link = '/chants/' . $categoryName . '/';
+            }
             $categories[] = [
-                'link' => '/chants/' . $categoryName . '/',
+                'link' => $link,
                 'title' => LocalizedName::for(str_replace('-', ' ', $categoryName)),
             ];
         }

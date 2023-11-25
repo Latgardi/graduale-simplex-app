@@ -8,7 +8,12 @@ class LocalizedCelebration
         "octavam_navitatis" =>'#De die\s([IV]+)\sinfra octavam Nativitatis#',
         "december" => "#Die\s([XIV]+)\sdecembris#",
         "feria" => "#(.+),\shebdomada\s([XIV]+)\s(.+)#",
-        "dominica" => "#Dominica\s([XIV]+)\s(.+)#"
+        "feria_hebdomadae_sanctae" => "#(.+)\s(Hebdomadae Sanctae)#",
+        "infra_octavam" => "#(.+)\s(infra\soctavam)\s(.+)#",
+        "post_octavam" => "#(.+)\s(post\soctavam)\s(.+)#",
+        "post" => "#(.+)\s(post)\s(.+)#",
+        "dominica" => "#Dominica\s([XIV]+)\s(.+)#",
+        "feria_alt" => "#(.+)\s([XIV]+)\s(.+)#",
     ];
     public function __construct(
         public string $title
@@ -40,16 +45,37 @@ class LocalizedCelebration
                             $localizedTitle .= (LocalizedName::for("hebdomada") ?? "hebdomada") . ' ';
                             $localizedTitle .= LocalizedName::for($matches[3]) ?? $matches[3];
                             break;
+                        case "feria_hebdomadae_sanctae":
+                            $localizedTitle .= (LocalizedName::for($matches[1]) ?? $matches[1]);
+                            $localizedTitle .= ' ' . (LocalizedName::for($matches[2]) ?? $matches[2]);
+                            break;
+                        case "infra_octavam":
+                        case "post_octavam":
+                        case "post":
+                            $localizedTitle .= (LocalizedName::for($matches[1]) ?? $matches[1]);
+                            $localizedTitle .= ' ' . (LocalizedName::for($matches[2]) ?? $matches[2]) . ' ';
+                            $localizedTitle .= LocalizedName::for($matches[3]) ?? $matches[3];
+                            break;
                         case "dominica":
                             $localizedTitle .= $matches[1] . ' ';
                             $localizedTitle .= (LocalizedName::for('dominica') ?? 'Dominica') . ' ';
                             $localizedTitle .= LocalizedName::for($matches[2]) ?? $matches[2];
+                            break;
+                        case "feria_alt":
+                            $localizedTitle .= (LocalizedName::for($matches[1]) ?? $matches[1]);
+                            $localizedTitle .= ' ' . $matches[2] . ' ';
+                            $localizedTitle .= LocalizedName::for($matches[3]) ?? $matches[3];
                     }
-                    return $localizedTitle;
+                    return $this->replaceShortU($localizedTitle);
                 }
             }
         }
         return $localizedTitle;
+    }
+
+    private function replaceShortU(string $string): string
+    {
+        return preg_replace('#([аоуеыёіэяю])\sу#u', '$1 ў', $string);
     }
 
 }

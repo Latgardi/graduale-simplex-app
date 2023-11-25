@@ -9,6 +9,7 @@ use App\View\Title;
 use GradualeSimplex\LiturgicalCalendar\Enum\Language;
 use GradualeSimplex\LiturgicalCalendar\Enum\Month;
 use GradualeSimplex\LiturgicalCalendar\LiturgicalCalendar;
+use GradualeSimplex\LiturgicalCalendar\Type\DateTimeExt;
 
 class CalendarController extends BaseController
 {
@@ -17,7 +18,7 @@ class CalendarController extends BaseController
         Title::set('Каляндар');
         $result = new ControllerResult();
         $result->set('title', LocalizedName::for(date('F')) . ' ' . date('Y'));
-        $date = new \DateTime();
+        $date = new DateTimeExt();
         $date->setTimestamp(time());
         self::calendar(
             year: $date->format("Y"),
@@ -40,7 +41,7 @@ class CalendarController extends BaseController
         foreach (Month::cases() as $case) {
             $months[] = [
                 'title' => LocalizedName::for($case->name),
-                'link' => '/calendar/' . $year . '/' . $case->value . '/',
+                'link' => '/calendar/' . $year . '/' . $case->value,
                 'current' => (int) $selectedMonth === $case->value
             ];
         }
@@ -48,10 +49,14 @@ class CalendarController extends BaseController
         foreach (range(1970, 2030) as $yearNumber) {
             $years[] = [
                 'title' => $yearNumber,
-                'link' => '/calendar/' . $yearNumber . '/',
+                'link' => '/calendar/' . $yearNumber,
                 'current' => (int) $year === $yearNumber
             ];
         }
+        $nearbyMonths = self::getNearbyMonthLinks($selectedMonth, $year);
+
+        $result->set('prevMonth', $nearbyMonths['prevMonth']);
+        $result->set('nextMonth', $nearbyMonths['nextMonth']);
         $result->set('months', $months);
         $result->set('currentMonth', $selectedMonth);
         $result->set('years', $years);
@@ -79,5 +84,33 @@ class CalendarController extends BaseController
         }
         $result->set('links', $months);
         self::render('link_list', $result);
+    }
+
+    private static function getNearbyMonthLinks(int $month, int $year): array
+    {
+        $nextMonthYear = $month === 12 ? $year + 1 : $year;
+        $nextMonthValue = $month === 12 ? 1 : $month + 1;
+        $nextMonthLink = "/calendar/$nextMonthYear/$nextMonthValue";
+
+        $prevMonthYear = $month === 1 ? $year - 1 : $year;
+        $prevMonthValue = $month === 1 ? 12 : $month - 1;
+        $prevMonthLink = "/calendar/$prevMonthYear/$prevMonthValue";
+
+        $prevMonth = [
+            'title' => LocalizedName::for(Month::tryFrom($prevMonthValue)->name)
+                . " $prevMonthYear",
+            'link' => $prevMonthLink
+        ];
+
+        $nextMonth = [
+            'title' => LocalizedName::for(Month::tryFrom($nextMonthValue)->name)
+                . " $nextMonthYear",
+            'link' => $nextMonthLink
+        ];
+
+        return [
+            'prevMonth' => $prevMonth,
+            'nextMonth' => $nextMonth,
+        ];
     }
 }

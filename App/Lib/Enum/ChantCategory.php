@@ -13,4 +13,20 @@ enum ChantCategory
     case Ritual_Masses;
     case Other;
     case Formulas;
+
+    // TODO dev solution, need to remove
+    public function getStatus(): CategoryWorkingStatus
+    {
+        return match ($this) {
+            self::Feasts => CategoryWorkingStatus::IsEmptyYet,
+            self::Formulas => CategoryWorkingStatus::InWork,
+            self::Other => CategoryWorkingStatus::IsEmptyYet,
+            self::Memorials => CategoryWorkingStatus::IsEmptyYet,
+            self::Ritual_Masses => CategoryWorkingStatus::IsEmptyYet,
+            self::Seasons => CategoryWorkingStatus::InWork,
+            self::Primary_Liturgical_Days => CategoryWorkingStatus::IsEmptyYet,
+            self::Solemnities => CategoryWorkingStatus::InWork,
+            self::Triduum_Paschale => CategoryWorkingStatus::IsEmptyYet,
+        };
+    }
 }

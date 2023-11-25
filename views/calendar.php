@@ -3,7 +3,7 @@
 use App\Lib\Type\ControllerResult;
 use App\Localization\LocalizedName;
 use GradualeSimplex\LiturgicalCalendar\Enum\Language;
-use GradualeSimplex\LiturgicalCalendar\Type\LiturgicalDay;
+use GradualeSimplex\LiturgicalCalendar\Enum\Month;use GradualeSimplex\LiturgicalCalendar\Type\LiturgicalDay;
 
 
 /** @var ControllerResult $result */
@@ -55,11 +55,14 @@ use GradualeSimplex\LiturgicalCalendar\Type\LiturgicalDay;
     </thead>
     <tbody>
     <?php /** @var LiturgicalDay $day */
-    foreach ($result->get('calendar') as $day):?>
+    foreach ($result->get('calendar') as $day):
+        ?>
         <tr>
-            <td>
-                <?= $day->date->format('j/n') ?>
-                <?= LocalizedName::for('short_' . $day->weekday->name) ?>
+            <td<?=$day->date->isToday() ? ' class="today"' : ''?>>
+                <p>
+                    <?= $day->date->format('j/n') ?>&nbsp;
+                    <?= LocalizedName::for('short_' . $day->weekday->name) ?>
+                </p>
             </td>
             <td>
                 <?php foreach ($day->celebrations as $celebration): ?>
@@ -69,11 +72,11 @@ use GradualeSimplex\LiturgicalCalendar\Type\LiturgicalDay;
                         </p>
                     <?php endif;?>
                     <p>
-<?php $colourValue = $celebration->colour->value; 
-if ($colourValue === 'violet') {
-	$colourValue = "purple";
-}
-?>
+                        <?php $colourValue = $celebration->colour->value;
+                        if ($colourValue === 'violet') {
+                            $colourValue = "purple";
+                        }
+                        ?>
                         <span class="dot" style="background-color: <?= $colourValue ?>"></span>
                         <?php if (!is_null($celebration->chantLink)):?>
                         <a href="<?=$celebration->chantLink?>"><b><?= $celebration->title ?></b></a>
@@ -98,3 +101,20 @@ if ($colourValue === 'violet') {
     <?php endforeach; ?>
     </tbody>
 </table>
+<div class="float-parent-element">
+    <div class="float-child-element">
+        <a class="button " href="<?=$result->get('prevMonth')['link']?>">
+            << <?=$result->get('prevMonth')['title']?>
+        </a>
+    </div>
+    <div class="float-child-element">
+        <a class="button" href="<?=$result->get('nextMonth')['link']?>">
+            <?=$result->get('nextMonth')['title']?> >>
+        </a>
+    </div>
+</div>
+
+<div style="display: flex;">
+
+</div>
+

@@ -3,7 +3,6 @@
 namespace GradualeSimplex\LiturgicalCalendar\Type;
 require_once dirname(__DIR__, 3) . '/vendor/autoload.php';
 
-use DateTime;
 use GradualeSimplex\LiturgicalCalendar\Enum\Season;
 use GradualeSimplex\LiturgicalCalendar\Enum\Weekday;
 use GradualeSimplex\LiturgicalCalendar\Exception\ZeroCelebrationException;
@@ -13,7 +12,7 @@ class LiturgicalDay
 {
     private const WEEK_REG_EXP = "#.+\s([XIV]+)\s(.+)#";
     /**
-     * @param DateTime $date
+     * @param DateTimeExt $date
      * @param Season $season
      * @param int $seasonWeek
      * @param array<Celebration> $celebrations
@@ -21,7 +20,7 @@ class LiturgicalDay
      * @throws ZeroCelebrationException
      */
     public function __construct(
-        public readonly DateTime $date,
+        public readonly DateTimeExt $date,
         public readonly Season $season,
         public readonly int $seasonWeek,
         public array $celebrations,

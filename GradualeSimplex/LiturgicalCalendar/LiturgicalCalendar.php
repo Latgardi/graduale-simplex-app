@@ -15,6 +15,7 @@ use GradualeSimplex\LiturgicalCalendar\Enum\LiturgicalColour;
 use GradualeSimplex\LiturgicalCalendar\Enum\Season;
 use GradualeSimplex\LiturgicalCalendar\Enum\Weekday;
 use GradualeSimplex\LiturgicalCalendar\Type\Celebration;
+use GradualeSimplex\LiturgicalCalendar\Type\DateTimeExt;
 use GradualeSimplex\LiturgicalCalendar\Type\LiturgicalDay;
 use GradualeSimplex\LiturgicalCalendar\Utility\Config;
 
@@ -142,7 +143,7 @@ class LiturgicalCalendar
     private function getLiturgicalDayFromJSONObject(object $JSONObject): ?LiturgicalDay
     {
         try {
-            $date = new \DateTime();
+            $date = new DateTimeExt();
             $date->setTimestamp(strtotime($JSONObject->date));
             $season = Season::tryFromString($JSONObject->season);
             $seasonWeek = (int)$JSONObject->season_week;

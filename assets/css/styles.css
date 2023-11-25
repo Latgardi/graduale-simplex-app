@@ -39,3 +39,46 @@ p.today-liturgy {
 code.sans {
     font-family: var(--sans-font);
 }
+td.today {
+    background-color: var(--accent);
+    color: black;
+    font-weight: bolder;
+}
+.float-parent-element {
+    width: 100%;
+}
+.float-child-element:first-child > * {
+    float: left;
+}
+.float-child-element:last-child > * {
+    float: right;
+}
+
+.arrow {
+    border: var(--bg);
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+
