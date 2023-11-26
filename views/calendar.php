@@ -104,12 +104,12 @@ use GradualeSimplex\LiturgicalCalendar\Enum\Month;use GradualeSimplex\Liturgical
 <div class="float-parent-element">
     <div class="float-child-element">
         <a class="button " href="<?=$result->get('prevMonth')['link']?>">
-            << <?=$result->get('prevMonth')['title']?>
+            << <? //$result->get('prevMonth')['title']?>
         </a>
     </div>
     <div class="float-child-element">
         <a class="button" href="<?=$result->get('nextMonth')['link']?>">
-            <?=$result->get('nextMonth')['title']?> >>
+            <? //$result->get('nextMonth')['title']?> >>
         </a>
     </div>
 </div>
