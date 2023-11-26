@@ -15,38 +15,25 @@ use GradualeSimplex\LiturgicalCalendar\Utility\IntToRoman;
 
 class SolemnityController extends BaseController
 {
-    private const SOLEMNITIES_DIR = '/library/solemnities/';
+    private const SOLEMNITIES_STORAGE_DIR = '/library/solemnities/';
+    private const SOLEMNITIES_WEB_PATH = '/chants/solemnities/';
     public static function solemnities(): void
     {
         Title::set(LocalizedName::for('solemnities'));
         $result = new ControllerResult();
-        $links = [];
-        if (is_dir($_SERVER['DOCUMENT_ROOT'] . self::SOLEMNITIES_DIR)) {
-            foreach (new DirectoryIterator(
-                         directory: $_SERVER['DOCUMENT_ROOT'] . self::SOLEMNITIES_DIR
-                     ) as $fileInfo) {
-                if ($fileInfo->isDot()) {
-                    continue;
-                }
-                $title = NameConverter::webToTitle($fileInfo->getFilename());
-                if ($localizedTitle = LocalizedName::for($title)) {
-                    $title = $localizedTitle;
-                }
-                $links[] = [
-                    'link' => $fileInfo->getFilename(),
-                    'title' => $title
-                ];
-            }
-        }
+        $links = self::getDirectoryFilesLinks(
+            relativeDirectoryPath: self::SOLEMNITIES_STORAGE_DIR,
+            webPath: self::SOLEMNITIES_WEB_PATH
+        );
         $result->set('links', $links);
         self::render('link_list', $result);
     }
 
     public static function solemnity(string $name, bool $setTitle = true): void
     {
-        if (is_dir($_SERVER['DOCUMENT_ROOT'] . self::SOLEMNITIES_DIR . $name)) {
+        if (is_dir($_SERVER['DOCUMENT_ROOT'] . self::SOLEMNITIES_STORAGE_DIR . $name)) {
             $result = new ControllerResult();
-            $relativeDirName = '/library/solemnities/' . $name;
+            $relativeDirName = self::SOLEMNITIES_STORAGE_DIR . $name;
             $absoluteDirName = $_SERVER['DOCUMENT_ROOT'] . $relativeDirName;
             $parts = self::getLiturgicalParts(absolutePath: $absoluteDirName, relativePath: $relativeDirName);
             if ($setTitle) {

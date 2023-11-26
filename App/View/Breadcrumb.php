@@ -2,6 +2,7 @@
 
 namespace App\View;
 
+use App\Lib\Utility\NameConverter;
 use App\Localization\LocalizedName;
 use App\View\Type\BreadcrumbItem;
 use Bitrix\Bizproc\Workflow\Template\Packer\Result\Pack;
@@ -50,7 +51,8 @@ class Breadcrumb
             if (($index === $partsCount - 1) && Title::getTitle() !== '') {
                 $title = Title::getTitle();
             } else {
-                $title = LocalizedName::for($part) ?? $part;
+                $name = NameConverter::webToTitle($part);
+                $title = LocalizedName::for($name) ?? $name;
             }
             $items[] = new BreadcrumbItem(
                 title: $title,

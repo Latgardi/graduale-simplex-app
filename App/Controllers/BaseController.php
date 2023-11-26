@@ -7,7 +7,9 @@ use App\Lib\Enum\ImageType;
 use App\Lib\Enum\LiturgyParts;
 use App\Lib\Type\ChantItem;
 use App\Lib\Type\ControllerResult;
+use App\Lib\Utility\NameConverter;
 use App\Localization\LocalizedName;
+use DirectoryIterator;
 
 class BaseController
 {
@@ -52,5 +54,28 @@ class BaseController
             }
         }
         return $parts;
+    }
+
+    protected static function getDirectoryFilesLinks(string $relativeDirectoryPath, string $webPath): array
+    {
+        $links = [];
+        if (is_dir($_SERVER['DOCUMENT_ROOT'] . $relativeDirectoryPath)) {
+            foreach (new DirectoryIterator(
+                         directory: $_SERVER['DOCUMENT_ROOT'] . $relativeDirectoryPath
+                     ) as $fileInfo) {
+                if ($fileInfo->isDot()) {
+                    continue;
+                }
+                $title = NameConverter::webToTitle($fileInfo->getFilename());
+                if ($localizedTitle = LocalizedName::for($title)) {
+                    $title = $localizedTitle;
+                }
+                $links[] = [
+                    'link' => $webPath . $fileInfo->getFilename(),
+                    'title' => $title
+                ];
+            }
+        }
+        return $links;
     }
 }

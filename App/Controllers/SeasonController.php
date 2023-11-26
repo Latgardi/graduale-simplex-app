@@ -10,11 +10,12 @@ use App\Lib\Type\ControllerResult;
 use App\Localization\LocalizedName;
 use App\View\Title;
 use DirectoryIterator;
-use GradualeSimplex\LiturgicalCalendar\Enum\AliasWeek;
+use GradualeSimplex\LiturgicalCalendar\Enum\AliasDominica;
 use GradualeSimplex\LiturgicalCalendar\Enum\Season;
 use GradualeSimplex\LiturgicalCalendar\Utility\IntToRoman;
 
 require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
+
 class SeasonController extends BaseController
 {
     private const SEASONS_URL_PREFIX = '/chants/seasons/';
@@ -50,14 +51,10 @@ class SeasonController extends BaseController
                 if ($fileInfo->isDot()) {
                     continue;
                 }
-                $title = null;
-                $aliasWeek = self::getAliasWeekName($season, (int)$fileInfo->getFilename());
-                if (!is_null($aliasWeek)) {
-                    $title = LocalizedName::for($aliasWeek);
-                }
-                if (is_null($title)) {
-                    $title = IntToRoman::convert((int)$fileInfo->getFilename()) . ' нядзеля';
-                }
+                $isDominica = AliasDominica::tryNamed($season->name . '_' . $fileInfo->getFilename()) === null;
+                $title = IntToRoman::convert((int)$fileInfo->getFilename()) . ' '
+                    . ($isDominica ? 'нядзеля' : 'тыдзень');
+
                 $links[] = [
                     'link' => self::SEASONS_URL_PREFIX . strtolower($season->name) . '/' . $fileInfo->getFilename(),
                     'title' => $title
@@ -79,27 +76,17 @@ class SeasonController extends BaseController
             Dispatcher::return404();
         }
         if ($setTitle) {
-            $title = null;
-            $aliasWeek = self::getAliasWeekName($season, $week);
-            if (!is_null($aliasWeek)) {
-                $title = LocalizedName::for($aliasWeek);
-            }
-            if (is_null($title)) {
-                $title = IntToRoman::convert((int)$week) . ' нядзеля ' . LocalizedName::for('of_' . $season->name);
-            }
-            //$title = LocalizedName::for($season->name) . ' ' . IntToRoman::convert((int)$week) . ' нядзеля';
-            $localizedRankName = LocalizedName::for("dominica");
+            $isDominica = AliasDominica::tryNamed($season->name . '_' . $week) === null;
+            $title = IntToRoman::convert((int)$week)
+                . ' ' . ($isDominica ? 'нядзеля' : 'тыдзень') . ' '
+                . LocalizedName::for('of_' . $season->name);
+            $localizedRankName = LocalizedName::for($isDominica ? "dominica" : "feria");
             Title::set($title, $localizedRankName);
             $result->set('title', $title);
         }
         $parts = self::getLiturgicalParts(absolutePath: $absoluteDirName, relativePath: $relativeDirName);
         $result->set('parts', $parts);
         self::render('liturgical_day', $result);
-    }
-
-    private static function getAliasWeekName(Season $season, int $week): ?string
-    {
-        return AliasWeek::tryNamed($season->name . '_' . $week);
     }
 
     private static function getSeasonDir(Season $forSeason): string

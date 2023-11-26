@@ -24,7 +24,7 @@ enum ChantCategory
             self::Memorials => CategoryWorkingStatus::IsEmptyYet,
             self::Ritual_Masses => CategoryWorkingStatus::IsEmptyYet,
             self::Seasons => CategoryWorkingStatus::InWork,
-            self::Primary_Liturgical_Days => CategoryWorkingStatus::IsEmptyYet,
+            self::Primary_Liturgical_Days => CategoryWorkingStatus::InWork,
             self::Solemnities => CategoryWorkingStatus::InWork,
             self::Triduum_Paschale => CategoryWorkingStatus::IsEmptyYet,
         };

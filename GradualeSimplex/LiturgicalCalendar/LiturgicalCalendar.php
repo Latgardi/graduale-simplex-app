@@ -5,7 +5,7 @@ require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 use App\Lib\Utility\NameConverter;
 use App\Localization\LocalizedLiturgicalDay;
-use GradualeSimplex\LiturgicalCalendar\Enum\AliasWeek;
+use GradualeSimplex\LiturgicalCalendar\Enum\AliasDominica;
 use GradualeSimplex\LiturgicalCalendar\Enum\CelebrationRank;
 use GradualeSimplex\LiturgicalCalendar\Enum\ConfigEntry;
 use GradualeSimplex\LiturgicalCalendar\Enum\Endpoint;
@@ -162,14 +162,16 @@ class LiturgicalCalendar
                     $celebrations = array_merge($celebrations, $this->additionalCelebrations[$additionalCelebrationsEntry]);
                 }
             }
+            $weekday = Weekday::tryFromString($JSONObject->weekday);
+
             foreach ($celebrations as $celebration) {
                 $celebration->chantLink = $this->getChantURLForCelebration(
                     celebration: $celebration,
+                    weekday: $weekday,
                     season: $season,
                     week: $seasonWeek
                 );
             }
-            $weekday = Weekday::tryFromString($JSONObject->weekday);
 
             return new LiturgicalDay(
                 date: $date,
@@ -185,6 +187,7 @@ class LiturgicalCalendar
 
     private function getChantURLForCelebration(
         Celebration $celebration,
+        Weekday     $weekday,
         ?Season     $season = null,
         int         $week = null
     ): ?string
@@ -198,12 +201,15 @@ class LiturgicalCalendar
             case CelebrationRank::Memoria:
                 return $this->getChantURLForMemorial($celebration);
             case CelebrationRank::Sollemnitas:
-                if (!$areNullSeasonAndWeek) {
-                    if (is_null(AliasWeek::tryNamed("{$season->name}_$week"))) {
+                /*if (!$areNullSeasonAndWeek) {
+                    if (
+                        $weekday === Weekday::Sunday
+                        && is_null(AliasDominica::tryNamed("{$season->name}_$week"))
+                    ) {
                         return $this->getChantURLForSolemnity($celebration);
                     }
                     return $this->getChantURLForRegularWeek($season, $week);
-                }
+                }*/
                 return $this->getChantURLForSolemnity($celebration);
             case CelebrationRank::DiesLiturgiciPrimarii:
                 if (!$areNullSeasonAndWeek) {

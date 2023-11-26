@@ -7,9 +7,30 @@ namespace Composer\Autoload;
 class ComposerStaticInit46453a0c2131410b92da1caffb4aa7c7
 {
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Svg\\' => 4,
+            'Sabberworm\\CSS\\' => 15,
+        ),
+        'N' => 
+        array (
+            'NoahBuscher\\Macaw\\' => 18,
+        ),
+        'M' => 
+        array (
+            'Masterminds\\' => 12,
+        ),
         'G' => 
         array (
             'GradualeSimplex\\' => 16,
+        ),
+        'F' => 
+        array (
+            'FontLib\\' => 8,
+        ),
+        'D' => 
+        array (
+            'Dompdf\\' => 7,
         ),
         'A' => 
         array (
@@ -18,9 +39,33 @@ class ComposerStaticInit46453a0c2131410b92da1caffb4aa7c7
     );
 
     public static $prefixDirsPsr4 = array (
+        'Svg\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg',
+        ),
+        'Sabberworm\\CSS\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
+        ),
+        'NoahBuscher\\Macaw\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/noahbuscher/macaw',
+        ),
+        'Masterminds\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/masterminds/html5/src',
+        ),
         'GradualeSimplex\\' => 
         array (
             0 => __DIR__ . '/../..' . '/GradualeSimplex',
+        ),
+        'FontLib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
+        ),
+        'Dompdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
         ),
         'App\\' => 
         array (
@@ -28,11 +73,17 @@ class ComposerStaticInit46453a0c2131410b92da1caffb4aa7c7
         ),
     );
 
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Dompdf\\Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit46453a0c2131410b92da1caffb4aa7c7::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit46453a0c2131410b92da1caffb4aa7c7::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit46453a0c2131410b92da1caffb4aa7c7::$classMap;
 
         }, null, ClassLoader::class);
     }

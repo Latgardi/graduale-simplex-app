@@ -37,6 +37,7 @@ class LocalizedName
             return
                 self::$strings[strtolower($string)]
                 ?? self::$strings[strtoupper($string)]
+                ?? self::$strings[ucwords($string)]
                 ?? self::$strings[$string]
                 ?? null;
         } catch (LocalizationInitException) {

@@ -2,7 +2,8 @@
     "name": "graduale-simplex/graduale-simplex.serv00.net",
     "type": "project",
     "require": {
-        "noahbuscher/macaw": "dev-master"
+        "noahbuscher/macaw": "dev-master",
+        "dompdf/dompdf": "^2.0"
     },
     "autoload": {
         "psr-4": {

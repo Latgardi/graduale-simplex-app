@@ -17,6 +17,11 @@ class ControllerResult
         return isset($this->data[$key]);
     }
 
+    public function hasEmpty(string $key): bool
+    {
+        return empty($this->data[$key]);
+    }
+
     public function set(string $key, mixed $value): void
     {
         $this->data[$key] = $value;
