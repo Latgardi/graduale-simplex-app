@@ -95,7 +95,7 @@ use GradualeSimplex\LiturgicalCalendar\Enum\Month;use GradualeSimplex\Liturgical
 				<td>
 				<p><?= $result->get('language') === Language::Belarusian
                                 ? (LocalizedName::for($day->season->name) ?? $day->season->name)
-                                : $day->season->name ?></p>
+                                : $day->season->value ?></p>
 				</td>
         </tr>
     <?php endforeach; ?>
@@ -104,12 +104,12 @@ use GradualeSimplex\LiturgicalCalendar\Enum\Month;use GradualeSimplex\Liturgical
 <div class="float-parent-element">
     <div class="float-child-element">
         <a class="button " href="<?=$result->get('prevMonth')['link']?>">
-            << <? //$result->get('prevMonth')['title']?>
+            << <? // TODO $result->get('prevMonth')['title']?>
         </a>
     </div>
     <div class="float-child-element">
         <a class="button" href="<?=$result->get('nextMonth')['link']?>">
-            <? //$result->get('nextMonth')['title']?> >>
+            <? // TODO $result->get('nextMonth')['title']?> >>
         </a>
     </div>
 </div>
