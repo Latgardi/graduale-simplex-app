@@ -1,0 +1,84 @@
+.dot {
+    height: 13px;
+    width: 13px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.breadcrumb {
+    padding: 10px 16px;
+    list-style: none;
+}
+
+.breadcrumb > * {
+    display: inline;
+    font-size: 18px;
+}
+.breadcrumb li+li:before{
+    font-family: var(--mono-font);
+    color: var(--code);
+    padding: 8px;
+    content: "/";
+}
+li.no-style {
+    list-style-type: none;
+}
+details {
+    padding: 0.7rem 0.1rem;
+    background-color: var(--bg);
+    border: none;
+}
+summary {
+    background-color: var(--accent-bg);
+    border: 1px solid var(--accent-bg);
+    border-radius: var(--standard-border-radius);
+}
+
+p.today-liturgy {
+    text-align: center;
+}
+code.sans {
+    font-family: var(--sans-font);
+}
+td.today {
+    background-color: var(--accent);
+    color: black;
+    font-weight: bolder;
+}
+.float-parent-element {
+    width: 100%;
+}
+.float-child-element:first-child > * {
+    float: left;
+}
+.float-child-element:last-child > * {
+    float: right;
+}
+
+.arrow {
+    border: var(--bg);
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+

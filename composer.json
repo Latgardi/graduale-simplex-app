@@ -1,0 +1,16 @@
+{
+    "name": "graduale-simplex/graduale-simplex.serv00.net",
+    "type": "project",
+    "require": {
+        "noahbuscher/macaw": "dev-master",
+        "mpdf/mpdf": "^8.2",
+        "ext-iconv": "*",
+        "ausi/slug-generator": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "GradualeSimplex\\": "GradualeSimplex/",
+            "App\\": "App/"
+        }
+    }
+}

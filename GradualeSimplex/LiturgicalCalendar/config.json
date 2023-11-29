@@ -1,0 +1,8 @@
+{
+  "AdditionalCelebritiesJSONFiles": [
+    "/data/local-celebrations/celebrations.json"
+  ],
+  "AdditionalSlugsDictionaryJSONFiles": [
+    "/data/local-celebrations/slugs.json"
+  ]
+}
