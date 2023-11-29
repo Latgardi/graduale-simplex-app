@@ -1,3 +1,4 @@
 /data/calendar/*
 /.idea
 /vendor
+/.htaccess
