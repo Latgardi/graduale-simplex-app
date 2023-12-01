@@ -192,7 +192,8 @@ class LiturgicalCalendar
             if (!is_null($this->additionalCelebrations)) {
                 $additionalCelebrationsEntry = $date->format(self::ADDITIONAL_CELEBRATIONS_ENTRY_DATE_FORMAT);
                 if (
-                    $celebrations[0]->rankNum > 1.3
+                    count($celebrations) > 0
+                    && $celebrations[0]->rankNum > 1.3
                     && isset($this->additionalCelebrations[$additionalCelebrationsEntry])
                 ) {
                     $celebrations = array_merge($celebrations, $this->additionalCelebrations[$additionalCelebrationsEntry]);

@@ -7,6 +7,7 @@ class LocalizedCelebration
     private const REG_EXP = [
         "octavam_navitatis" =>'#De die\s([IV]+)\sinfra octavam Nativitatis#',
         "december" => "#Die\s([XIV]+)\sdecembris#",
+        "hebdomada" => "#Hebdomada\s([XIV]+)\s(.+)#",
         "feria" => "#(.+),\shebdomada\s([XIV]+)\s(.+)#",
         "feria_hebdomadae_sanctae" => "#(.+)\s(Hebdomadae Sanctae)#",
         "infra_octavam" => "#(.+)\s(infra\soctavam)\s(.+)#",
@@ -44,6 +45,11 @@ class LocalizedCelebration
                             $localizedTitle .= ', ' . $matches[2] . ' ';
                             $localizedTitle .= (LocalizedName::for("hebdomada") ?? "hebdomada") . ' ';
                             $localizedTitle .= LocalizedName::for($matches[3]) ?? $matches[3];
+                            break;
+                        case "hebdomada":
+                            $localizedTitle .= (LocalizedName::for($matches[1]) ?? $matches[1]);
+                            $localizedTitle .= ' ' . (LocalizedName::for("hebdomada") ?? "hebdomada") . ' ';
+                            $localizedTitle .= (LocalizedName::for($matches[2]) ?? $matches[2]);
                             break;
                         case "feria_hebdomadae_sanctae":
                             $localizedTitle .= (LocalizedName::for($matches[1]) ?? $matches[1]);

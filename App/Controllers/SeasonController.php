@@ -2,15 +2,20 @@
 
 namespace App\Controllers;
 
+use App\Database\Connector;
+use App\Database\QueryBuilder;
 use App\HTTPRouter\Dispatcher;
 use App\Lib\Enum\ImageType;
-use App\Lib\Enum\LiturgyParts;
+use App\Lib\Enum\LiturgyPart;
+use App\Lib\Type\ListLink;
 use App\Lib\Type\ChantItem;
 use App\Lib\Type\ControllerResult;
+use App\Localization\LocalizedCelebration;
 use App\Localization\LocalizedName;
 use App\View\Title;
 use DirectoryIterator;
 use GradualeSimplex\LiturgicalCalendar\Enum\AliasDominica;
+use GradualeSimplex\LiturgicalCalendar\Enum\CelebrationRank;
 use GradualeSimplex\LiturgicalCalendar\Enum\Season;
 use GradualeSimplex\LiturgicalCalendar\Utility\IntToRoman;
 use GradualeSimplex\LiturgicalCalendar\Utility\RomanNumber;
@@ -27,11 +32,10 @@ class SeasonController extends BaseController
         $result = new ControllerResult();
         $seasons = [];
         foreach (Season::cases() as $season) {
-            $seasons[] = [
-                'link' => self::SEASONS_URL_PREFIX . strtolower($season->name),
-                'title' => LocalizedName::for(strtolower($season->name)),
-                'colour' => Season::getColour(season: $season)
-            ];
+            $seasons[] = new ListLink(
+                title: LocalizedName::for(strtolower($season->name)),
+                link: self::SEASONS_URL_PREFIX . strtolower($season->name)
+            );
         }
         $result->set('links', $seasons);
         $this->render('link_list', $result);
@@ -43,61 +47,35 @@ class SeasonController extends BaseController
         if (is_null($season)) {
             Dispatcher::return404();
         }
+        $baseLink = self::SEASONS_URL_PREFIX . strtolower($season->name) . '/';
         $result = new ControllerResult();
+        $queryBuilder = new QueryBuilder();
+        $days = $queryBuilder->getSeasonDays($season);
         $links = [];
-        if (is_dir($this->getSeasonDir(forSeason: $season))) {
-            foreach (new DirectoryIterator(
-                         directory: $this->getSeasonDir(forSeason: $season)
-                     ) as $fileInfo) {
-                if ($fileInfo->isDot()) {
-                    continue;
-                }
-                $isDominica = AliasDominica::tryNamed($season->name . '_' . $fileInfo->getFilename()) === null;
-                $number = new RomanNumber((int) $fileInfo->getFilename());
-                $title = $number->getRomanValue() . ' '
-                    . ($isDominica ? 'нядзеля' : 'тыдзень');
-
-                $links[] = [
-                    'link' => self::SEASONS_URL_PREFIX . strtolower($season->name) . '/' . $fileInfo->getFilename(),
-                    'title' => $title,
-                    'number' => $number->getIntValue()
-                ];
+        if (!is_null($days)) {
+            foreach ($days as $day) {
+                $localizedCelebration = new LocalizedCelebration($day['title']);
+                $dayNumber = RomanNumber::excludeFromString($day['title']);
+                $links[] = new ListLink(
+                    title: $localizedCelebration->getTranslation() ?? $day['title'],
+                    link: $baseLink . $day['slug'],
+                    number: $dayNumber?->getIntValue()
+                );
             }
+            usort($links, static function ($a, $b) {
+                return $a->number <=> $b->number;
+            });
         }
-        usort($links, static function ($a, $b) {
-            return $a['number'] <=> $b['number'];
-        });
         $result->set('links', $links);
         Title::set(LocalizedName::for($season->name) ?? "");
         $this->render('link_list', $result);
     }
 
-    public function day($season, $week, $setTitle = true): void
+    public function day($season, $slug, $setTitle = true): void
     {
         $season = Season::tryFromString($season);
-        $result = new ControllerResult();
-        $relativeDirName = '/library/seasons/' . strtolower($season->name) . '/' . $week;
-        $absoluteDirName = $_SERVER['DOCUMENT_ROOT'] . $relativeDirName;
-        if (!is_dir($absoluteDirName)) {
-            Dispatcher::return404();
-        }
-        if ($setTitle) {
-            $isDominica = AliasDominica::tryNamed($season->name . '_' . $week) === null;
-            $number = new RomanNumber((int) $week);
-            $title = $number->getRomanValue()
-                . ' ' . ($isDominica ? 'нядзеля' : 'тыдзень') . ' '
-                . LocalizedName::for('of_' . $season->name);
-            $localizedRankName = LocalizedName::for($isDominica ? "dominica" : "feria");
-            Title::set($title, $localizedRankName);
-            $result->set('title', $title);
-        }
-        $parts = $this->getLiturgicalParts(absolutePath: $absoluteDirName, relativePath: $relativeDirName);
-        $result->set('parts', $parts);
-        $this->render('liturgical_day', $result);
-    }
-
-    private function getSeasonDir(Season $forSeason): string
-    {
-        return dirname(__DIR__, 2) . '/library/seasons/' . strtolower($forSeason->name);
+        $queryBuilder = new QueryBuilder();
+        $pdo = $queryBuilder->getSeasonDay($season, $slug);
+        $this->renderLiturgicalDay(dayPDO: $pdo, setTitle: $setTitle);
     }
 }

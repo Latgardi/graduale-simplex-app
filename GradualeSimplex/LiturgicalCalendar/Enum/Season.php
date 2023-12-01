@@ -33,7 +33,6 @@ enum Season: string implements EnumFromString
             self::Ordinary => LiturgicalColour::Green,
             self::Christmas => LiturgicalColour::White,
             self::Easter => LiturgicalColour::White,
-            self::Lent => LiturgicalColour::Violet,
         };
     }
 }

@@ -14,18 +14,19 @@ enum CelebrationRank: string implements EnumFromString
     case Festum = "Festum";
     case DiesLiturgiciPrimarii = "Dies liturgici primarii";
     case TriduumPaschale = "Triduum Paschale";
+    case Commemoratio = "Commemoratio";
 
     public static function tryFromString(string $string): ?self
     {
         return match ($string) {
-            "Dies liturgici primarii" => self::DiesLiturgiciPrimarii,
+            "dies liturgici primarii" => self::DiesLiturgiciPrimarii,
             "feria" => self::Feria,
             "memoria" => self::Memoria,
             "sollemnitas" => self::Sollemnitas,
             "festum" => self::Festum,
             "dominica" => self::Dominica,
             "memoria ad libitum" => self::MemoriaAdLibitum,
-            "Triduum paschale" => self::TriduumPaschale
+            "triduum paschale" => self::TriduumPaschale
         };
     }
 }

@@ -3,7 +3,8 @@
     "type": "project",
     "require": {
         "ext-iconv": "*",
-        "ausi/slug-generator": "^1.1"
+        "ausi/slug-generator": "^1.1",
+        "ext-pdo": "*"
     },
     "autoload": {
         "psr-4": {

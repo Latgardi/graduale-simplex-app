@@ -2,16 +2,17 @@
 error_reporting(E_ALL);
 
 use App\Lib\Enum\ImageType;
+use App\Lib\Type\CelebrationPropers;
 use App\Lib\Type\ChantItem;
 use App\Lib\Type\ControllerResult;
 /** @var ControllerResult $result */
-/** @var ChantItem $part */
-ob_start();
-foreach ($result->get('parts') as $part):?>
+/** @var CelebrationPropers $propers */
+$propers = $result->get('propers');
+foreach ($propers->getChants() as $chant):?>
     <details>
-        <summary><?=$part->title?></summary>
-    <?php if ($ImagePath = $part->imagePath):
-        if ($part->imageType === ImageType::PDF):?>
+        <summary><?=$chant->part->name?></summary>
+    <?php if ($ImagePath = $chant->imagePath):
+        if ($chant->imageType === ImageType::PDF):?>
             <object data="<?=$ImagePath?>" type="application/pdf" width="100%" height="500px">
             </object>
         <?php else:?>
@@ -23,13 +24,13 @@ foreach ($result->get('parts') as $part):?>
             </p>
     <?php endif;
     endif;
-    if ($HTMLDesription = $part->imageDescription):?>
+    if ($HTMLDescription = $chant->imageDescription):?>
         <p class="notice">
-            <?=$HTMLDesription?>
+            <?=$HTMLDescription?>
         </p>
     <?php endif;
-    if ($HTMLPath = $part->HTMLPath):
-        include_once $HTMLPath;
+    if ($verset = $chant->verset):
+        echo $verset;
     endif;?>
     </details>
 <?php endforeach;

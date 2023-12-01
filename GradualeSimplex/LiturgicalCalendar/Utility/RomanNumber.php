@@ -15,7 +15,7 @@ class RomanNumber {
         'I' => 1,
     ];
     private const array ROMAN_ZERO = ['N', 'nulla'];
-    private const string ROMAN_REGEX = '/^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/';
+    private const string ROMAN_REGEX = '/\b(?=[MDCLXVI])(M{0,3})(C[DM]|D?C{0,3})(X[LC]|L?X{0,3})(I[VX]|V?I{0,3})\b/';
     private int|string $number;
 
     public function __construct(string|int $number)
@@ -24,6 +24,23 @@ class RomanNumber {
             throw new InvalidArgumentException(message: 'Roman number is not valid.');
         }
         $this->number = $number;
+    }
+
+    public static function excludeFromString(string $string): ?self
+    {
+        preg_match_all(self::ROMAN_REGEX, $string, $matches);
+        if (is_array($matches)) {
+            foreach ($matches as $group) {
+                foreach ($group as $match) {
+                    try {
+                        return new self(number: $match);
+                    } catch (InvalidArgumentException) {
+                        continue;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     public static function isRomanNumber($roman): bool

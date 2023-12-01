@@ -17,6 +17,9 @@ class LocalizedLiturgicalCalendar
     public function getCalendar(): array
     {
         foreach ($this->days as &$day) {
+            if (is_null($day)) {
+                continue;
+            }
             $localizedDay = new LocalizedLiturgicalDay(day: $day);
             $day = $localizedDay->getDay();
         }

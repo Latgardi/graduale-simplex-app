@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Lib\Enum\CategoryWorkingStatus;
 use App\Lib\Enum\ChantCategory;
 use App\Lib\Type\ControllerResult;
+use App\Lib\Type\ListLink;
 use App\Localization\LocalizedName;
 use App\View\Title;
 use GradualeSimplex\LiturgicalCalendar\Enum\Season;
@@ -24,10 +25,10 @@ class ChantController extends BaseController
             } else {
                 $link = '/chants/' . $categoryName . '/';
             }
-            $categories[] = [
-                'link' => $link,
-                'title' => LocalizedName::for(str_replace('-', ' ', $categoryName)),
-            ];
+            $categories[] = new ListLink(
+                title: LocalizedName::for(str_replace('-', ' ', $categoryName)),
+                link: $link
+            );
         }
         $result->set('links', $categories);
         $this->render('link_list', $result);
